@@ -163,10 +163,9 @@ def get_random_move():
 def get_expectimax_move(b):
     return expectimax(b, PLAYER, 0)[0]
 
+# Opgave A
 
 def expectimax(b, turn, depth):
-    pass
-
     # wikipedia pseudocode
     # if node is a terminal node or depth = 0
     #   return the heuristic value of node
@@ -220,6 +219,12 @@ def expectimax(b, turn, depth):
                     score = expectimax(new_b, PLAYER, depth + 1)[1]
                     # 90% chance to get a 2, so we weigh by multiplying by 9
                     total += score * 9
+
+                    # Opgave B
+                    # Bij Expectimax is pruning minder winstgevend dan bij Minimax
+                    # Wel zou het kunnen werken als de kansen ver uit elkaar liggen
+                    # Dus in theorie is de mogelijkheid op een 4 verwaarloosbaar
+                    # als de kans 1:10 is. Dit zou de helft (?) schelen.
 
                     # try to place a 4
                     new_b[x][y] = 4
