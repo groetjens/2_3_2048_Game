@@ -14,6 +14,7 @@ WEIGHTS = [
 
 PLAYER, CPU = 0, 1
 
+
 def merge_left(b):
     # merge the board left
     # this function is reused in the other merges
@@ -47,6 +48,7 @@ def merge_left(b):
     # return [[2, 8, 0, 0], [2, 4, 8, 0], [4, 0, 0, 0], [4, 4, 0, 0]]
     return new_b
 
+
 def merge_right(b):
     # merge the board right
     # b = [[0, 2, 4, 4], [0, 2, 4, 8], [0, 0, 0, 4], [2, 2, 2, 2]]
@@ -60,6 +62,7 @@ def merge_right(b):
     # return [[0, 0, 2, 8], [0, 2, 4, 8], [0, 0, 0, 4], [0, 0, 4, 4]]
     return [reverse(x) for x in ml]
 
+
 def merge_up(b):
     # merge the board upward
     # note that zip(*b) is the transpose of b
@@ -69,11 +72,13 @@ def merge_up(b):
     # return [[2, 4, 8, 4], [0, 2, 2, 8], [0, 0, 0, 4], [0, 0, 0, 2]]
     return [list(x) for x in zip(*trans)]
 
+
 def merge_down(b):
     # merge the board downward
     trans = merge_right(zip(*b))
     # return [[0, 0, 0, 4], [0, 0, 0, 8], [0, 2, 8, 4], [2, 4, 2, 2]]
     return [list(x) for x in zip(*trans)]
+
 
 # location: after functions
 MERGE_FUNCTIONS = {
@@ -83,8 +88,9 @@ MERGE_FUNCTIONS = {
     'down': merge_down
 }
 
+
 def move_exists(b):
-    # check whether or not a move exists on the board
+    # check whether a move exists on the board
     # b = [[1, 2, 3, 4], [5, 6, 7, 8]]
     # move_exists(b) return False
     def inner(b):
@@ -102,6 +108,7 @@ def move_exists(b):
     else:
         return False
 
+
 def start():
     # make initial board
     b = [[0] * 4 for _ in range(4)]
@@ -109,11 +116,13 @@ def start():
     add_two_four(b)
     return b
 
+
 def play_move(b, direction):
-    # get merge functin an apply it to board
+    # get merge function and apply it to board
     b = MERGE_FUNCTIONS[direction](b)
     add_two_four(b)
     return b
+
 
 def add_two_four(b):
     # add a random tile to the board at open position.
@@ -128,13 +137,15 @@ def add_two_four(b):
             return (b)
         else:
             continue
-            
+
+
 def game_state(b):
     for i in range(4):
         for j in range(4):
             if b[i][j] >= 2048:
                 return 'win'
     return 'lose'
+
 
 def test():
     b = [[0, 2, 4, 4], [0, 2, 4, 8], [0, 0, 0, 4], [2, 2, 2, 2]]
@@ -156,12 +167,14 @@ def test():
         add_two_four(b)
         print(b)
 
+
 def get_random_move():
     return random.choice(list(MERGE_FUNCTIONS.keys()))
 
 
 def get_expectimax_move(b):
     return expectimax(b, PLAYER, 0)[0]
+
 
 # Opgave A
 
@@ -172,14 +185,12 @@ def expectimax(b, turn, depth):
     if depth > MAX_DEPTH or not move_exists(b):
         return ("left", heuristics(b))
 
-
     # TODO THIS IS NOT USED BECAUSE THERE IS NO ADVERSARY THAT PLAYS
     # if the adversary is to play at node
     #   ###return value of minimum-valued child node
     #   alfa = math.inf
     #   for child in node:
     #       alfa = min(alfa, expectimax(child, depth - 1)
-
 
     # if we are to play at node
     #   ### return value of maximum-valued child node
@@ -194,6 +205,7 @@ def expectimax(b, turn, depth):
                 # if board is the same and no place for a new tile: move on
                 continue
             new_move = (direction, expectimax(new_b, CPU, depth + 1)[1])
+            # move[1] = the expectimax-assigned value of the move
             if new_move[1] > max_move[1]:
                 max_move = new_move
         return max_move
@@ -213,7 +225,6 @@ def expectimax(b, turn, depth):
         for x in range(4):
             for y in range(4):
                 if new_b[x][y] == 0:
-
                     # try to place a 2
                     new_b[x][y] = 2
                     score = expectimax(new_b, PLAYER, depth + 1)[1]
@@ -267,4 +278,3 @@ def has_empty_spot(b):
 
 def clone_board(b):
     return copy.deepcopy(b)
-
